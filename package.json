@@ -1,0 +1,24 @@
+{
+  "name": "hapiweek.github.io",
+  "version": "1.0.0",
+  "description": "week 8 dum......dumdum darrrrgghhhh",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TEAM-SORD/hapiweek.github.io.git"
+  },
+  "author": "david beech and the members of SORD",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TEAM-SORD/hapiweek.github.io/issues"
+  },
+  "homepage": "https://github.com/TEAM-SORD/hapiweek.github.io",
+  "dependencies": {
+    "hapi": "^8.4.0",
+    "joi": "^6.0.8"
+  }
+}
