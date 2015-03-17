@@ -19,6 +19,8 @@
   "homepage": "https://github.com/TEAM-SORD/hapiweek.github.io",
   "dependencies": {
     "hapi": "^8.4.0",
-    "joi": "^6.0.8"
+    "joi": "^6.0.8",
+    "mongodb-uri": "^0.9.7",
+    "mongoose": "^3.8.25"
   }
 }
