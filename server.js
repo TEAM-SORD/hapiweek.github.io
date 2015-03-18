@@ -1,16 +1,17 @@
 var postsColl = require("./posts");
 var Hapi = require('hapi');
+var Joi = require('joi');
 // var mongoose = require("mongoose");
 // var uriUtil = require('mongodb-uri');
 
 var server = new Hapi.Server();
 server.connection({ port: 3000 });
 
-var joiSchema = Joi.object().options({ abortEarly: false }).keys({
+var joiSchema = Joi.object().keys({
     author: Joi.string().required(),
     title: Joi.string().required(),
     text: Joi.string().required(),
-    date: Joi.date().required(),
+    date: Joi.date().optional(),
     image: Joi.string().optional()
 });
 
@@ -25,17 +26,15 @@ server.register([ /* plugins */], function (err) {
     path: '/',
     handler: function (request, reply) {
         var query = postsColl.getPosts( );
-        query.sort( {date: 'descending'} ).exec( function (err, posts) { 
-            console.log( 'In getPostsForSideBar - query.exec : ' + posts ); 
-            // allPosts = posts; renderOtherPane( allPosts ); 
+        query.sort( {date: 'descending'} ).exec( function (err, posts) {
+            // console.log( 'In getPostsForSideBar - query.exec : ' + posts );
+            // allPosts = posts; renderOtherPane( allPosts );
             reply('Blog homepage here' + posts.length);
         });
             // function(err, blogPosts) {
         //     console.log( 'In blogPostModel : ' + blogPosts);
         //     if( err ) {
         //         console.log( 'Error: ' + err )
-
-        
     }
 });
 
@@ -67,21 +66,21 @@ server.route({
 // payload parse 'true' is the default value, but worth knowing about. Uses the content-type header to parse the payload. set to false if you want the raw payload.
 server.route({
     method: 'POST',
-    config: { 
-        validate:{
-            payload: joiSchema,
-        },
-        payload: {output: 'data', parse: true} 
+    config: {
+         validate:{
+             payload: joiSchema,
+         },
     },
-    path: '/',
+    path: '/posts',
     handler: function (request, reply) {
         // code here to handle new post
-        // request.payload.author;
-        postsColl.addPost("a post to add to the database-json object", function (err){
-                console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
-             reply('New Post Added');   
+        console.log("in post handler");
+        console.log(request.payload); //.author;
+        postsColl.addPost(request.payload,function (err){
+
+             console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
+             reply(request.payload).code(201);
             });
-        
     }
 
 });
@@ -122,4 +121,4 @@ server.start(function () {
 
 // A set of example RESTful routes that could describe a blog
 
-
+module.exports = server;

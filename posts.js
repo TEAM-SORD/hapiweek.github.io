@@ -1,6 +1,6 @@
 // Require mongoose and other node modules \\
 var mongoose = require("mongoose");
-var ObjectId = require('mongoose').Types.ObjectId; 
+var ObjectId = require('mongoose').Types.ObjectId;
 var uriUtil = require('mongodb-uri');
 var http = require("http");
 var url = require("url");
@@ -33,6 +33,11 @@ var blogSchema = mongoose.Schema({
 
 var blogPostModel = mongoose.model("blogposts", blogSchema);
 
+function formatID( searchCriteria ) {
+	var query = { _id: new ObjectId(searchCriteria) };
+	return query;
+}
+
 module.exports = {
 
 	getPosts : function( searchCriteria ) {
@@ -49,5 +54,23 @@ module.exports = {
 			doSomethingWithResults( blogPosts );
 		});*/
 
-	}
+	},
+	addPost  : function( newPost, successCB ) {
+		var post = new blogPostModel(newPost);
+		console.log( 'Post model: ' + post );
+		post.save(function (err) {
+		  if (err) {
+		  	console.log( 'Error: ' + err );
+		  }
+		  console.log( 'Saved to the collection!');
+		  successCB( err );
+		});
+	},
+	updatePost : function( post, successCB ) {
+		var searchCriteria = formatID( post.id );
+		var  update = post,
+  			 options = { multi: true };
+
+		blogPostModel.update(searchCriteria, update, options, successCB);
+	},
 	};
