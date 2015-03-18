@@ -1,0 +1,6 @@
+div(class="blog-sidebar")
+	h4 Explore All Blogs
+	div(class="sidebar-module")
+		each post in postlist
+			a(href="blogpage?id="+post.id)
+				li #{post.title} - #{post.date}
