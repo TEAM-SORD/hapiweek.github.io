@@ -1,0 +1,20 @@
+div(class="blog-main")
+	if posts.length > 1
+		- for (var x = 0; x < 3; x++)
+			div(class="blog-post")
+				h2(class="blog-post-title") 
+					a( href="blogpage?id="+posts[x]._id) #{posts[x].title}
+				p(class="blog-post-meta") #{posts[x].date} 
+				hr
+				p #{posts[x].text}
+	
+
+
+			
+
+      
+
+     
+
+            
+            

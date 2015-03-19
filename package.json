@@ -18,10 +18,16 @@
   },
   "homepage": "https://github.com/TEAM-SORD/hapiweek.github.io",
   "dependencies": {
+    "bell": "^2.2.0",
+    "chai": "^2.1.2",
     "hapi": "^8.4.0",
+    "hapi-auth-cookie": "^2.0.0",
+    "jade": "^1.9.2",
     "joi": "^6.0.8",
+    "lab": "^5.5.0",
     "mongodb-uri": "^0.9.7",
-    "mongoose": "^3.8.25"
+    "mongoose": "^3.8.25",
+    "path": "^0.11.14"
   },
   "devDependencies": {
     "chai": "^2.1.2",

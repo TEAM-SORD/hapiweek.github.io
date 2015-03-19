@@ -1,0 +1,16 @@
+include ./mixins.jade
+include ./layout.jade
+div(class="header")
+	include ./header
+div(class="container")
+	div(class="row")
+		div(class='col-sm-12 titlebar')
+			include ./titlebar
+div(class="container")
+	div(class="row")
+		div(class="col-sm-3 col-sm-offset-1 sidebar")
+			+sidebar("blogpage")
+		div(class="col-sm-8 main")
+			include ./main
+script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
+script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
