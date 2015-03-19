@@ -23,7 +23,8 @@ var joiSchema = Joi.object().keys({
     title: Joi.string().required(),
     text: Joi.string().required(),
     date: Joi.date().optional(),
-    image: Joi.string().optional()
+    month: Joi.string().allow('').optional(),
+    image: Joi.string().allow('').optional()
 });
 
 server.views({
@@ -57,6 +58,11 @@ server.register([Bell, Cookie], function (err) {
         method: 'GET',
         path: '/index.css',
         handler: handler.css
+    });
+    server.route({
+        method: 'GET',
+        path: '/index.js',
+        handler: handler.js
     });
     server.route({
         method: ['GET', 'POST'],

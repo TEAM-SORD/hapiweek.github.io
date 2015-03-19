@@ -1,3 +1,4 @@
+var moment = require( 'moment' );
 var postsCollection = require( "./posts" );
 var loggedIn = false;
 
@@ -13,6 +14,9 @@ module.exports = {
 
 	css: function (request, reply) {
         reply.file('index.css');
+	},
+	js: function (request, reply) {
+        reply.file('index.js');
 	},
 	login: function (request, reply) {
         var t = request.auth.credentials;
@@ -99,10 +103,11 @@ module.exports = {
         if(request.auth.isAuthenticated) {
 	        // Add date to new post:
 	        var payload = request.payload;
-	        payload.date = new Date();
+	        payload.date = moment().format('MMMM Do YYYY');
+	        payload.month = moment().format('MMMM' );
 	        console.log( 'New Post created: ' + payload );
-	        getPostsForSideBar( function( allPosts ) {    			 
-		        postsCollection.addPost(payload, function (err){
+	        postsCollection.addPost(payload, function (err){
+	        	getPostsForSideBar( function( allPosts ) {    	
 		            console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
 		            reply.view( 'edit', { posts : "", postlist: allPosts, loggedIn: loggedIn } ).code(201);   
 		        });
@@ -116,7 +121,9 @@ module.exports = {
         // handle request to update an existing post
 		console.log("Update Handler called.");
         if (request.auth.isAuthenticated) {
-			request.payload.date = new Date();
+			var payload = request.payload;
+	        payload.date = moment().format('MMMM Do YYYY');
+	        payload.month = moment().format('MMMM' );
 			postsCollection.updatePost( request.payload, function(err, numAffected) {
 				// numAffected is the number of updated documents
 				console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts updated (1): ' + numAffected );

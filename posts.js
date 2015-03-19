@@ -26,11 +26,9 @@ var blogSchema = mongoose.Schema({
 	title  : String,
 	text   : String,
 	date   : Object,
+	month  : String,
 	image  : String
 });
-
-
-
 
 var blogPostModel = mongoose.model("blogposts", blogSchema);
 
