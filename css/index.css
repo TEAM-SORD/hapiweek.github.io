@@ -1,0 +1,64 @@
+.container {
+	background-color: #5C99A1;
+}
+.header {
+	font-family: 'Orbitron', Cursive, serif;
+	text-align: center;
+	font-weight: bold;
+    text-align: center;
+    padding-top: 0.5px;
+    height: 70px;
+}
+
+.sidebar {
+	font-family: 'Orbitron', Cursive, serif;
+  	background-color: #EDF6F7;
+    height: 90%;
+    width: 350px;
+    float: right;
+    margin: 5px;	
+    border-radius: 4px;
+    margin-right: 13px;
+    margin-left: 2px;
+}
+
+
+.main, .post, .editpane {
+	font-family: 'Orbitron', Cursive, serif;
+	background-color: #EDF6F7;
+    height: 90%;
+    width: 780px;
+    margin: 5px;
+    border-radius: 4px;
+}
+
+.textarea{
+    float: left;
+    clear: left;
+    height: 600px;
+    width: 700px;
+    border-color: black;
+    border-width: 2px;
+}
+
+.editpane{
+    float:right;
+}
+.close{
+    float: left;
+}
+
+.save,.text, .title {
+    float: left;
+    clear: left;
+}
+
+.navbar-default {
+    margin-top:10px;
+}
+.authorlabel, .titlelabel, .idlabel{
+    float:left;
+}
+.author, .title,.id {
+    float:right;
+}

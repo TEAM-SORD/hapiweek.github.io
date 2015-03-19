@@ -6,7 +6,15 @@ var Path = require( 'path');
 var handler = require("./handler");
 var config = require('./config.json');
 
-var server = new Hapi.Server();
+var server = new Hapi.Server({
+    connections: {
+        routes: {
+            files: {
+                relativeTo: Path.join(__dirname, 'css')
+            }
+        }
+    }
+});
 server.connection({ port: 3000 });
 
 var joiSchema = Joi.object().keys({
@@ -45,6 +53,11 @@ server.register([Bell, Cookie], function (err) {
     });
 
     server.route({
+        method: 'GET',
+        path: '/index.css',
+        handler: handler.css
+    });
+    server.route({
         method: ['GET', 'POST'],
         path: '/login',
         config: {
@@ -68,6 +81,12 @@ server.register([Bell, Cookie], function (err) {
 
         method: 'GET',
         path: '/',
+        handler: handler.home
+    });
+
+    server.route ({
+        method: 'GET',
+        path: '/home',
         handler: handler.home
     });
 
@@ -128,7 +147,20 @@ server.register([Bell, Cookie], function (err) {
 
         handler: handler.update
     });
+    
+    server.route({
+        method: 'POST',
+        config: { 
+            payload: {output: 'data', parse: true},
+            auth: {
+                    strategy: 'session',
+                    mode: 'try'
+            }
+        },
+        path: '/update',
 
+        handler: handler.update
+    });
     server.route({
         method: 'DELETE',
         //path: '/{id}',
