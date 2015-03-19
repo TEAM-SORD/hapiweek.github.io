@@ -1,9 +1,10 @@
 include ./layout.jade
+include ./mixins.jade
 div(class="header")
 	include ./header
 div(class="container")
 	div(class="sidebar")
-		include ./sidebar
+		+sidebar("blogpage")
 	div(class="post")
 		include ./blogpage
 script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")

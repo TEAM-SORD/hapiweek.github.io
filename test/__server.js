@@ -10,11 +10,7 @@ lab.experiment("This trivial test: ", function() {
   });
 });
 
-<<<<<<< HEAD
-lab.experiment("A basic server test: ", function() {
 
-  var options = {
-=======
 lab.experiment("Try to get authenticated via Twitter: ", function() {
 
   var request = {
@@ -65,7 +61,6 @@ lab.experiment("Try to get authenticated via Twitter: ", function() {
 lab.experiment("A basic server test: ", function() {
 
   var request = {
->>>>>>> sarahbranch
     url: "/",
     method: "GET"
   };
@@ -73,12 +68,6 @@ lab.experiment("A basic server test: ", function() {
 
   lab.test("The home page ", function(done) {
 
-<<<<<<< HEAD
-    server.inject(options, function(response) {
-
-      assert.equal(response.statusCode, 200, "should return a 200 status code");
-      assert.equal(typeof response.result, "string", "should reply with a string");
-=======
     server.inject(request, function(response) {
       console.log( "Is AUth? " + response.request.auth.isAuthenticated );
       console.log( response );
@@ -89,7 +78,6 @@ lab.experiment("A basic server test: ", function() {
       // else {
       //   assert.equal(response.result, "Not Authenticated", "should reply with 'Not Authenticated'");
       // }
->>>>>>> sarahbranch
       // console.log("start of response", response);
       done();
     });
@@ -101,11 +89,8 @@ lab.experiment("A basic server test: ", function() {
 lab.experiment("Making a post", function() {
 
   var request = {
-<<<<<<< HEAD
-    url: "/posts",
-=======
+
     url: "/create",
->>>>>>> sarahbranch
     method: "POST",
     payload: {
       author: "thezurgx",
@@ -118,20 +103,13 @@ lab.experiment("Making a post", function() {
 
     server.inject(request, function(response) {
       assert.equal(response.statusCode, 201, "should return a 201 CREATED status code");
-<<<<<<< HEAD
       assert.deepEqual(response.result, request.payload, "should reply with the created post's content");
-=======
-      assert.deepEqual(response.result.author, request.payload.author, "should reply with the created post's content");
->>>>>>> sarahbranch
+      //assert.deepEqual(response.result.author, request.payload.author, "should reply with the created post's content");
       done();
     });
   });
 });
 
-<<<<<<< HEAD
-//lab.experiment(update)
-//lab.experiment(user auth)
-=======
 lab.experiment("update a post", function() {
 
   var request = {
@@ -186,4 +164,3 @@ lab.experiment("open edit/new page", function() {
     });
   });
 });
->>>>>>> sarahbranch
