@@ -1,0 +1,6 @@
+include ./mixins.jade
+if posts
+	+blogform( 'create', 'POST' )
+if !posts
+	+blogform( 'create', 'POST' )
+	

@@ -1,38 +1,10 @@
 var postsCollection = require( "./posts" );
-
-function insertOrUpdate(request, sendResponse){
-	console.log( 'In insertOrUpdate.');
-	console.log( 'Req.method: ' + req.method );
-
-	// var payload = request.payload.id;
-	// return ( payload )? 
-    
-	// req.on('end', function() {
-	// 	console.log( 'fullBody: ' + fullBody );
-	// 	var decodedBody = querystring.parse(fullBody);
-	// 	decodedBody.date = new Date();
-	// 	if( decodedBody.id ){
-	// 		console.log( 'Found id so update.');
-	// 		db.updatePost(decodedBody, function(err, numAffected) {
-	// 			// numAffected is the number of updated documents
-	// 			console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts updated (1): ' + numAffected );
-	// 			sendResponse();
-	// 		});
-	// 	}
-	// 	else {
-	// 		console.log( 'No id found so insert.');
-	// 		db.addPost(decodedBody, function (err){
-	// 			console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
-	// 			sendResponse();
-	// 		});
-	// 	}
-	// });
-};
+var loggedIn = false;
 
 function getPostsForSideBar( renderOtherPane ){
 	var query = postsCollection.getPosts();
 	query.sort( {date: 'descending'} ).exec( function (err, posts) {
-		console.log( 'In getPostsForSideBar - query.exec : ' + posts );
+		console.log( 'In getPostsForSideBar - query.exec : ' + posts.length );
 		allPosts = posts;
 		renderOtherPane( allPosts );
 	});
@@ -57,14 +29,20 @@ module.exports = {
             fullName: t.profile.displayName,
         };
         // console.log('profile', profile);
+        loggedIn = true;
         request.auth.session.clear();
         request.auth.session.set(profile);
+        return reply.redirect('/');
+    },
+    logout: function (request, reply) {
+    	loggedIn = false;
+        request.auth.session.clear();
         return reply.redirect('/');
     },
 	home: function (request, reply) {
 		var query = postsCollection.getPosts( );
 		query.sort( {date: 'descending'} ).exec( function (err, posts) { 
-		    reply.view( 'index', { posts : posts, postlist: posts });
+		    reply.view( 'index', { posts : posts, postlist: posts, loggedIn: loggedIn });
 		});
 	},
 	blogpage: function (request, reply) {
@@ -75,7 +53,7 @@ module.exports = {
 	    		console.log( 'BLOG_ID: ' + blog_id );
 				var query = postsCollection.getPosts( blog_id );
 				query.exec(function (err, post) {
-					reply.view( 'post', { posts : post, postlist: allPosts });
+					reply.view( 'post', { posts : post, postlist: allPosts, loggedIn: loggedIn });
 	            	//with post' + request.params.id + 'loaded for editing');
 				});
     		});
@@ -85,17 +63,29 @@ module.exports = {
 		}
     },
     editpage: function (request, reply) {
+    	console.log("Edit Handler called.");
         if(request.auth.isAuthenticated) {
-        	console.log("Edit Handler called.");
-	        //var reqURL = url.parse( req.url, true );
-			//var blog_id = reqURL.query.id;	
 			var blog_id = request.query.id;
 			console.log( 'Blog ID to edit: ' + blog_id );
 	        getPostsForSideBar( function( allPosts ) {    		
 				var query = postsCollection.getPosts( blog_id );
 				query.exec(function (err, post) {
 					post = ( blog_id )? post : "";
-					reply.view( 'edit', { posts: post, postlist: allPosts });
+					reply.view( 'edit', { posts: post, postlist: allPosts, loggedIn: loggedIn });
+				});
+    		});
+		}
+		else {
+			reply( "Not Authenticated");
+		}
+    },
+    createpage: function (request, reply) {
+       	console.log("Create page Handler called.");
+        if (request.auth.isAuthenticated) {
+	        getPostsForSideBar( function( allPosts ) {    		
+				var query = postsCollection.getPosts();
+				query.exec(function (err, post) {
+					reply.view( 'new', { posts: "", postlist: allPosts, loggedIn: loggedIn });
 				});
     		});
 		}
@@ -104,7 +94,8 @@ module.exports = {
 		}
     },
 	create: function (request, reply) {
-        // code here to handle new post
+        // handle request to create a new 
+		console.log("Create Handler called.");
         if(request.auth.isAuthenticated) {
 	        // Add date to new post:
 	        var payload = request.payload;
@@ -113,7 +104,7 @@ module.exports = {
 	        getPostsForSideBar( function( allPosts ) {    			 
 		        postsCollection.addPost(payload, function (err){
 		            console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
-		            reply.view( 'edit', { posts : "", postlist: allPosts } ).code(201);   
+		            reply.view( 'edit', { posts : "", postlist: allPosts, loggedIn: loggedIn } ).code(201);   
 		        });
 		    });
         }
@@ -122,28 +113,18 @@ module.exports = {
 		}
     },
 	update: function (request, reply ) {
+        // handle request to update an existing post
 		console.log("Update Handler called.");
         if (request.auth.isAuthenticated) {
-			//if PUT then do DB update
-			// if POST then do DB insert/add
 			request.payload.date = new Date();
-			var update = (request.payload.id )? true: false;
-	 
-			getPostsForSideBar( function( allPosts ) {    			 
-				if( update ) {
-	    			postsCollection.updatePost( request.payload, function(err, numAffected) {
-						// numAffected is the number of updated documents
-						console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts updated (1): ' + numAffected );
-						reply.view( 'edit',  { posts : request.payload, postlist: allPosts } ).code(201);
-					});	
-	    		}
-	    		else{
-	    			postsCollection.addPost(request.payload, function (err){
-			            console.log( ( err )? 'Error posting to db: ' + err : 'Successfully added to db');
-			            reply.view( 'edit', { posts : "", postlist: allPosts } ).code(201);   
-			        });
-	    		}
-    		});
+			postsCollection.updatePost( request.payload, function(err, numAffected) {
+				// numAffected is the number of updated documents
+				console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts updated (1): ' + numAffected );
+				// need to refresh blog list sidebar
+				getPostsForSideBar( function( allPosts ) {
+					reply.view( 'edit',  { posts : [request.payload], postlist: allPosts, loggedIn: loggedIn } ).code(201);
+				});
+			});	
 		}
 		else {
 			reply( "Not Authenticated");
