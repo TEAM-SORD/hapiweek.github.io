@@ -18,6 +18,7 @@ var server = new Hapi.Server({
 server.connection({ port: 3000 });
 
 var joiSchema = Joi.object().keys({
+    id: Joi.string().allow('').optional(),
     author: Joi.string().required(),
     title: Joi.string().required(),
     text: Joi.string().required(),
@@ -70,10 +71,7 @@ server.register([Bell, Cookie], function (err) {
         path: '/logout',
         config: {
             auth: 'session',
-            handler: function (request, reply) {
-                request.auth.session.clear();
-                return reply.redirect('/');
-            }
+            handler: handler.logout
         }
     });
     // ... Register the routes
@@ -113,7 +111,17 @@ server.register([Bell, Cookie], function (err) {
         },
         handler: handler.editpage
     });
-
+    server.route({
+        method: 'GET',
+        path: '/createpage',
+        config: {
+            auth: {
+                    strategy: 'session',
+                    mode: 'try'
+            }
+        },
+        handler: handler.createpage
+    });
     // payload output 'data' will read POST payload into memory. Can also be put in a file or made available as a stream
     // payload parse 'true' is the default value, but worth knowing about. Uses the content-type header to parse the payload. set to false if you want the raw payload.
     server.route({
@@ -134,22 +142,8 @@ server.register([Bell, Cookie], function (err) {
 
     // PUT has a payload too..
     server.route({
-        method: 'PUT',
-        config: { 
-            payload: {output: 'data', parse: true},
-            auth: {
-                    strategy: 'session',
-                    mode: 'try'
-            }
-        },
-        //path: '/{id}',
-        path: '/update',
-
-        handler: handler.update
-    });
-    
-    server.route({
         method: 'POST',
+        path: '/update',
         config: { 
             payload: {output: 'data', parse: true},
             auth: {
@@ -157,10 +151,9 @@ server.register([Bell, Cookie], function (err) {
                     mode: 'try'
             }
         },
-        path: '/update',
-
         handler: handler.update
     });
+
     server.route({
         method: 'DELETE',
         //path: '/{id}',
@@ -171,18 +164,9 @@ server.register([Bell, Cookie], function (err) {
         }
     });
 
-// server.route({
-//     method: 'GET',
-//     path: '/{id}',
-//     handler: function (request, reply) {
-//         reply('Blog Post here, id: '+request.params.id);
-//     }
-// });
-
     server.start(function () {
         console.log('Server running at:', server.info.uri);
     });
-
 
 });
 
