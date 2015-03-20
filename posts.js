@@ -26,11 +26,9 @@ var blogSchema = mongoose.Schema({
 	title  : String,
 	text   : String,
 	date   : Object,
+	month  : String,
 	image  : String
 });
-
-
-
 
 var blogPostModel = mongoose.model("blogposts", blogSchema);
 
@@ -43,7 +41,11 @@ module.exports = {
 
 	getPosts : function( searchCriteria ) {
 		// searchCriteria = { _id : sf184943095043 }
+
 		if( searchCriteria ) {
+			if( searchCriteria.month ){
+				return blogPostModel.find( searchCriteria );
+			}
 			searchCriteria = formatID( searchCriteria );
 		}
 	    return blogPostModel.find( searchCriteria );

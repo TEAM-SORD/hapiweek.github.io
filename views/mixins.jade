@@ -2,9 +2,32 @@ mixin sidebar(endpoint)
 	div(class="blog-sidebar")
 		h4 Explore All Blogs
 		div(class="sidebar-module")
-			each post in postlist
-				a(href="#{endpoint}?id="+post.id)
-					li #{post.title} - #{post.date}
+			li
+				a(class='archive' href="home?id=January") January
+			li 
+				a(class='archive' href="home?id=February") February
+			li
+				a(class='archive' href="home?id=March") March
+			li 
+				a(class='archive' href="home?id=April") April
+			li 
+				a(class='archive' href="home?id=May") May
+			li 
+				a(class='archive' href="home?id=June") June 
+			li 
+				a(class='archive' href="home?id=July") July
+			li 
+				a(class='archive' href="home?id=August") August
+			li 
+				a(class='archive' href="home?id=September") September
+			li 
+				a(class='archive' href="home?id=October") October
+			li 
+				a(class='archive' href="home?id=November") November
+			li 
+				a(class='archive' href="home?id=December") December
+
+
 
 mixin loggedIn(loggedIn)
 	if loggedIn 
