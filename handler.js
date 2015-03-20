@@ -19,21 +19,13 @@ module.exports = {
 	css: function (request, reply) {
         reply.file('index.css');
 	},
-	// js: function (request, reply) {
- //        reply.file('index.js');
-	// },
 	login: function (request, reply) {
         var t = request.auth.credentials;
-        // console.log('t', t);
-
         var profile = {
             token: t.token,
             secret: t.secret,
             twitterId: t.profile.id,
             twitterName: t.profile.username,
-            //avatar: t.profile.raw.profile_image_url.replace('_normal', ''),
-            //website: t.profile.raw.entities.url.urls[0].expanded_url,
-            //about: t.profile.raw.description,
             fullName: t.profile.displayName,
         };
         // console.log('profile', profile);
@@ -59,29 +51,6 @@ module.exports = {
 		    reply.view( 'index', { posts : posts, postlist: posts, loggedIn: loggedIn });
 		});
 	},
-	// archive: function( request, reply ) {
-	// 	console.log("BlogPage Handler called.");
-	// 	if(request.auth.isAuthenticated) {
- //    		console.log( 'Request: ' + request.payload.month );
-	//    //  		var monthNumeric = request.query.id;
-	//    //  		monthNumeric = 2;
-	// 			// var month = monthNames[monthNumeric];
-
-	//     		//console.log( 'Month: ' + month );
-	// 			var query = postsCollection.getPosts( {'month': request.payload.month} );
-	// 			query.exec(function (err, posts) {
-	// 				if( err ) console.log( 'Error: ' + err );
-	// 				console.log( 'Posts: ' + posts );
-	// 				reply( posts );
-	// 				//reply.view( 'post', { posts : posts, postlist: posts, loggedIn: loggedIn });
-	//             	//with post' + request.params.id + 'loaded for editing');
-	// 			});
-    	
-	// 	}
-	// 	else {
-	// 		reply( "Not Authenticated");
-	// 	}
-	// },
 	blogpage: function (request, reply) {
 		console.log("BlogPage Handler called.");
 		if(request.auth.isAuthenticated) {
@@ -158,7 +127,6 @@ module.exports = {
 	        payload.date = moment().format('MMMM Do YYYY');
 	        payload.month = moment().format('MMMM' );
 			postsCollection.updatePost( request.payload, function(err, numAffected) {
-				// numAffected is the number of updated documents
 				console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts updated (1): ' + numAffected );
 				// need to refresh blog list sidebar
 				getPostsForSideBar( function( allPosts ) {
@@ -169,5 +137,17 @@ module.exports = {
 		else {
 			reply( "Not Authenticated");
 		}		
+	},
+	delete: function (request, reply) {
+		if (request.auth.isAuthenticated) {
+			console.log( "In Delete Handler");
+			postsCollection.deletePost( request, function(err, numAffected) {
+				console.log( ( err )? 'Error posting to db: ' + err : 'Number of posts deleted (1): ' + numAffected );
+				reply.redirect( '/editpage');
+			});
+		}
+		else {
+			reply( "Not Authenticated");
+		}
 	}
 };

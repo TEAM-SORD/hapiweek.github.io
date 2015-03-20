@@ -1,10 +1,17 @@
-div(class="row")
-	div(class="col-sm-8 blog-main")
-		if posts.length = 1
-			each post in posts
-				div(class="blog-post")
-						h2(class="blog-post-title") 
-							a( href="blogpage?id="+post._id) #{post.title}
-						p(class="blog-post-meta") #{post.date} 
-						hr
-						p #{post.text}
+if posts.length = 1
+	each post in posts
+		div(class='actions-header')
+			div(class='postactions')
+				form(id='editbutton' action="editpage?id="+post._id class="inline-form" method='POST')
+					button(class='edit-btn' tooltipped tooltipped-n type='submit' aria-label='Edit this post' data-disable-with)
+						span(class='glyphicon glyphicon-pencil')
+				form(id='deletebutton' action="delete?id="+post._id class="inline-form" method='POST')
+					button(class='delete-btn delete-btn-danger' tooltipped tooltipped-n type="submit" aria-label="Delete this post" data-disable-with)
+						span(class='glyphicon glyphicon-trash')
+		div(class="blog-main")
+			div(class="blog-post")
+					h2(class="blog-post-title") 
+						a( href="blogpage?id="+post._id) #{post.title}
+					p(class="blog-post-meta") #{post.date} 
+					hr
+					p #{post.text}

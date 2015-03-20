@@ -59,11 +59,7 @@ server.register([Bell, Cookie], function (err) {
         path: '/index.css',
         handler: handler.css
     });
-    // server.route({
-    //     method: 'GET',
-    //     path: '/index.js',
-    //     handler: handler.js
-    // });
+   
     server.route({
         method: ['GET', 'POST'],
         path: '/login',
@@ -94,18 +90,6 @@ server.register([Bell, Cookie], function (err) {
         handler: handler.home
     });
 
-    // server.route({
-    //     method: 'POST',
-    //     path: '/archive',
-    //     config: {
-    //         auth: {
-    //                 strategy: 'session',
-    //                 mode: 'try'
-    //         }
-    //     },
-    //     handler: handler.archive
-    // });
-
     server.route({
         method: 'GET',
         path: '/blogpage',
@@ -119,7 +103,7 @@ server.register([Bell, Cookie], function (err) {
     });
 
     server.route({
-        method: 'GET',
+        method: ['GET', 'POST'],
         path: '/editpage',
         config: {
             auth: {
@@ -140,8 +124,6 @@ server.register([Bell, Cookie], function (err) {
         },
         handler: handler.createpage
     });
-    // payload output 'data' will read POST payload into memory. Can also be put in a file or made available as a stream
-    // payload parse 'true' is the default value, but worth knowing about. Uses the content-type header to parse the payload. set to false if you want the raw payload.
     server.route({
         method: 'POST',
         path: '/create',
@@ -153,12 +135,10 @@ server.register([Bell, Cookie], function (err) {
                     strategy: 'session',
                     mode: 'try'
             }
-            //payload: {output: 'data', parse: true} 
         },
         handler: handler.create
     });
 
-    // PUT has a payload too..
     server.route({
         method: 'POST',
         path: '/update',
@@ -173,13 +153,9 @@ server.register([Bell, Cookie], function (err) {
     });
 
     server.route({
-        method: 'DELETE',
-        //path: '/{id}',
+        method: 'POST',
         path: '/delete',
-        handler: function (request, reply) {
-            // code here to delete post
-            reply('Post '+request.params.id +' deleted');
-        }
+        handler: handler.delete
     });
 
     server.start(function () {
@@ -187,7 +163,5 @@ server.register([Bell, Cookie], function (err) {
     });
 
 });
-
-// A set of example RESTful routes that could describe a blog
 
 module.exports = server;

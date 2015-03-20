@@ -33,22 +33,20 @@ var blogSchema = mongoose.Schema({
 var blogPostModel = mongoose.model("blogposts", blogSchema);
 
 function formatID( searchCriteria ) {
-	var query = { _id: new ObjectId(searchCriteria) };
-	return query;
+	if( searchCriteria ){
+	 	return { _id: new ObjectId(searchCriteria) };
+	}
+	return searchCriteria;
 }
 
 module.exports = {
 
 	getPosts : function( searchCriteria ) {
-		// searchCriteria = { _id : sf184943095043 }
-
-		if( searchCriteria ) {
-			if( searchCriteria.month ){
-				return blogPostModel.find( searchCriteria );
-			}
-			searchCriteria = formatID( searchCriteria );
+		// format searchCriteria into an object like: { _id : jslkjfdsfjskdjfs}
+		if( searchCriteria && searchCriteria.month ) {
+			return blogPostModel.find( searchCriteria );
 		}
-	    return blogPostModel.find( searchCriteria );
+	    return blogPostModel.find( formatID( searchCriteria ) );
 	},
 	addPost  : function( newPost, successCB ) {
 		var post = new blogPostModel(newPost);
@@ -70,8 +68,9 @@ module.exports = {
 
 		blogPostModel.update(searchCriteria, update, options, successCB);
 	},
-	deletePost : function( post ) {
-
-
+	deletePost : function( post, successCB ) {
+		// format searchCriteria into an object like: { _id : jslkjfdsfjskdjfs}
+		var searchCriteria = formatID( post.query.id );
+	    blogPostModel.remove( searchCriteria, successCB );
 	}
 };

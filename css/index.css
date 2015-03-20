@@ -27,7 +27,7 @@
 	font-family: 'Orbitron', Cursive, serif;
 	background-color: #EDF6F7;
     height: 90%;
-    width: 780px;
+    //width: 780px;
     margin: 5px;
     border-radius: 4px;
 }
@@ -41,7 +41,7 @@
     border-width: 2px;
 }
 
-.editpane{
+.editpane, #editbutton, #deletebutton{
     float:right;
 }
 .close{
