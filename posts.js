@@ -41,7 +41,11 @@ module.exports = {
 
 	getPosts : function( searchCriteria ) {
 		// searchCriteria = { _id : sf184943095043 }
+
 		if( searchCriteria ) {
+			if( searchCriteria.month ){
+				return blogPostModel.find( searchCriteria );
+			}
 			searchCriteria = formatID( searchCriteria );
 		}
 	    return blogPostModel.find( searchCriteria );

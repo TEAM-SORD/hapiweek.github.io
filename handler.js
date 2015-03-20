@@ -2,6 +2,10 @@ var moment = require( 'moment' );
 var postsCollection = require( "./posts" );
 var loggedIn = false;
 
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 function getPostsForSideBar( renderOtherPane ){
 	var query = postsCollection.getPosts();
 	query.sort( {date: 'descending'} ).exec( function (err, posts) {
@@ -15,9 +19,9 @@ module.exports = {
 	css: function (request, reply) {
         reply.file('index.css');
 	},
-	js: function (request, reply) {
-        reply.file('index.js');
-	},
+	// js: function (request, reply) {
+ //        reply.file('index.js');
+	// },
 	login: function (request, reply) {
         var t = request.auth.credentials;
         // console.log('t', t);
@@ -44,11 +48,40 @@ module.exports = {
         return reply.redirect('/');
     },
 	home: function (request, reply) {
-		var query = postsCollection.getPosts( );
+		console.log( 'In home handler: ' + request.query.id);
+		var month = request.query.id;
+		var searchCriteria = "";
+		if( month ){
+			searchCriteria = {'month': month};
+		}
+		var query = postsCollection.getPosts( searchCriteria );
 		query.sort( {date: 'descending'} ).exec( function (err, posts) { 
 		    reply.view( 'index', { posts : posts, postlist: posts, loggedIn: loggedIn });
 		});
 	},
+	// archive: function( request, reply ) {
+	// 	console.log("BlogPage Handler called.");
+	// 	if(request.auth.isAuthenticated) {
+ //    		console.log( 'Request: ' + request.payload.month );
+	//    //  		var monthNumeric = request.query.id;
+	//    //  		monthNumeric = 2;
+	// 			// var month = monthNames[monthNumeric];
+
+	//     		//console.log( 'Month: ' + month );
+	// 			var query = postsCollection.getPosts( {'month': request.payload.month} );
+	// 			query.exec(function (err, posts) {
+	// 				if( err ) console.log( 'Error: ' + err );
+	// 				console.log( 'Posts: ' + posts );
+	// 				reply( posts );
+	// 				//reply.view( 'post', { posts : posts, postlist: posts, loggedIn: loggedIn });
+	//             	//with post' + request.params.id + 'loaded for editing');
+	// 			});
+    	
+	// 	}
+	// 	else {
+	// 		reply( "Not Authenticated");
+	// 	}
+	// },
 	blogpage: function (request, reply) {
 		console.log("BlogPage Handler called.");
 		if(request.auth.isAuthenticated) {
